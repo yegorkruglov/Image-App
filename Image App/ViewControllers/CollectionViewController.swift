@@ -10,6 +10,8 @@ import UIKit
 final class CollectionViewController: UICollectionViewController {
     
     // MARK: - Private Properties
+    private var posts: [Post] = []
+    private let networkManager = NetworkManager.shared
     private let sectionInsets = UIEdgeInsets(top: 20, left: 20.0, bottom: 20, right: 20.0)
     private let itemsPerRow: CGFloat = 2
     private var searchBar: UISearchController = {
@@ -18,31 +20,46 @@ final class CollectionViewController: UICollectionViewController {
         searchBar.searchBar.searchBarStyle = .minimal
         return searchBar
     }()
-
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ImageCell")
+        self.collectionView!.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         
+        configureNavBar()
+        fetchPosts()
+    }
+    
+    private func fetchPosts() {
+        Task {
+            do {
+                posts = try await networkManager.fetchPosts()
+                collectionView.reloadData()
+            } catch  {
+                print(error)
+            }
+        }
+    }
+    
+    private func configureNavBar() {
         title = "Image App"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
         searchBar.searchResultsUpdater = self
-        
-        
     }
 }
 
 // MARK: - UICollectionViewDataSource
 extension CollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return posts.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-        cell.backgroundColor = .blue
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as? ImageCell else { return UICollectionViewCell() }
+        let post = posts[indexPath.item]
+        cell.configure(with: post)
         
         return cell
     }
@@ -71,7 +88,7 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UISearchResultsUpdating
 extension CollectionViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let query = searchController.searchBar.text else{return}
+        guard let query = searchController.searchBar.text else { return }
     }
     
     

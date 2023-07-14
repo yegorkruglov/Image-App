@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ImageCell: UICollectionViewCell {
     var imageView: UIImageView = {
@@ -18,17 +19,10 @@ class ImageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(imageView)
-        configureUI()
+        configureImageView()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
-extension ImageCell{
-    func configureUI(){
+    func configureImageView(){
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -36,8 +30,22 @@ extension ImageCell{
         imageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
-    func updateCell(posterURL: String?){
+    func configure(with post: Post) {
+        let imageURL = URL(string: post.urls.small)
         
-        
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(
+            with: imageURL,
+            options: [
+                .scaleFactor(UIScreen.main.scale),
+                .transition(.fade(1)),
+                .cacheOriginalImage
+            ]
+        )
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
