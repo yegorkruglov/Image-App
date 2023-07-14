@@ -8,10 +8,12 @@
 import UIKit
 import Kingfisher
 
-class ImageCell: UICollectionViewCell {
+final class ImageCell: UICollectionViewCell {
     var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 10
         
         return imageView
     }()
@@ -38,8 +40,7 @@ class ImageCell: UICollectionViewCell {
             with: imageURL,
             options: [
                 .scaleFactor(UIScreen.main.scale),
-                .transition(.fade(1)),
-                .cacheOriginalImage
+                .transition(.fade(1))
             ]
         )
     }
