@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class CollectionViewController: UICollectionViewController {
     
@@ -47,7 +48,22 @@ final class CollectionViewController: UICollectionViewController {
         navigationItem.searchController = searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
         searchBar.searchResultsUpdater = self
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .refresh,
+            target: self,
+            action: #selector(reloadHomePage)
+        )
     }
+    
+    @objc private func reloadHomePage() {
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        fetchPosts()
+    }
+    
 }
 
 // MARK: - UICollectionViewDataSource
