@@ -13,6 +13,7 @@
 		5DE8F6C02A617CCF006EEF7A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DE8F6BE2A617CCF006EEF7A /* LaunchScreen.storyboard */; };
 		5DE8F6C82A617D9E006EEF7A /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE8F6C72A617D9E006EEF7A /* CollectionViewController.swift */; };
 		5DE8F6CA2A617E3A006EEF7A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE8F6C92A617E3A006EEF7A /* ViewController.swift */; };
+		5DE8F6D52A61A027006EEF7A /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE8F6D42A61A027006EEF7A /* ImageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		5DE8F6C12A617CCF006EEF7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5DE8F6C72A617D9E006EEF7A /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		5DE8F6C92A617E3A006EEF7A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5DE8F6D42A61A027006EEF7A /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,12 +58,13 @@
 		5DE8F6B22A617CCE006EEF7A /* Image App */ = {
 			isa = PBXGroup;
 			children = (
-				5DE8F6D02A617F89006EEF7A /* Extensions */,
-				5DE8F6CF2A617F7C006EEF7A /* Models */,
 				5DE8F6CB2A617EBE006EEF7A /* App */,
-				5DE8F6CC2A617ED7006EEF7A /* ViewControllers */,
 				5DE8F6CD2A617EE1006EEF7A /* Resources */,
 				5DE8F6CE2A617EE8006EEF7A /* Storyboards */,
+				5DE8F6D02A617F89006EEF7A /* Extensions */,
+				5DE8F6CF2A617F7C006EEF7A /* Models */,
+				5DE8F6D32A619FD3006EEF7A /* Views */,
+				5DE8F6CC2A617ED7006EEF7A /* ViewControllers */,
 			);
 			path = "Image App";
 			sourceTree = "<group>";
@@ -113,6 +116,14 @@
 			children = (
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		5DE8F6D32A619FD3006EEF7A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5DE8F6D42A61A027006EEF7A /* ImageCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,6 +200,7 @@
 				5DE8F6B42A617CCE006EEF7A /* AppDelegate.swift in Sources */,
 				5DE8F6CA2A617E3A006EEF7A /* ViewController.swift in Sources */,
 				5DE8F6B62A617CCE006EEF7A /* SceneDelegate.swift in Sources */,
+				5DE8F6D52A61A027006EEF7A /* ImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
