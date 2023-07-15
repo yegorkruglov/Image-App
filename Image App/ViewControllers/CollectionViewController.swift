@@ -28,13 +28,14 @@ final class CollectionViewController: UICollectionViewController {
         self.collectionView!.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         
         configureNavBar()
-        fetchPosts()
+        fetchRandomPosts()
     }
     
-    private func fetchPosts() {
+    // MARK: - Private Methods
+    private func fetchRandomPosts() {
         Task {
             do {
-                posts = try await networkManager.fetchPosts()
+                posts = try await networkManager.fetchRandomPosts(numberOfPosts: 10)
                 collectionView.reloadData()
             } catch  {
                 print(error)
@@ -61,7 +62,7 @@ final class CollectionViewController: UICollectionViewController {
         cache.clearMemoryCache()
         cache.clearDiskCache()
         
-        fetchPosts()
+        fetchRandomPosts()
     }
     
 }
@@ -69,7 +70,7 @@ final class CollectionViewController: UICollectionViewController {
 // MARK: - UICollectionViewDataSource
 extension CollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return posts.count
+        posts.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

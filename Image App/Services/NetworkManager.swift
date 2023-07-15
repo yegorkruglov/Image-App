@@ -16,12 +16,12 @@ enum NetworkError: Error {
 final class NetworkManager {
     static let shared = NetworkManager()
     
-    private let accessKey = "NX34jEa70uwhD_hTvldS06VrNVL_w_v8wJL86a2fk_Q"
+    private let apiKey = "NX34jEa70uwhD_hTvldS06VrNVL_w_v8wJL86a2fk_Q"
     
-    func fetchPosts() async throws -> [Post] {
-        guard let url = URL(string: "https://api.unsplash.com/photos/?client_id=\(accessKey)") else {
+    func fetchRandomPosts(numberOfPosts count: Int) async throws -> [Post] {
+        guard let url = URL(string: "https://api.unsplash.com/photos/random?client_id=\(apiKey)&count=\(count)") else {
             throw NetworkError.invalidURL
-        }
+         }
         
         let (data, _) = try await URLSession.shared.data(from: url)
         
@@ -32,7 +32,6 @@ final class NetworkManager {
         } catch {
             throw NetworkError.decodingError
         }
-        
     }
     
     private init() {}
