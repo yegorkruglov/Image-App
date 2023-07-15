@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class CollectionViewController: UICollectionViewController {
+final class CollectionViewController: UICollectionViewController, UISearchControllerDelegate {
     
     // MARK: - Private Properties
     private var posts: [Post] = []
@@ -26,6 +26,7 @@ final class CollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView!.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
+        searchBar.delegate = self
         
         configureNavBar()
         fetchRandomPosts()
@@ -112,6 +113,14 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
 extension CollectionViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let query = searchController.searchBar.text else { return }
+        Task {
+            do {
+                posts = try await networkManager.searchPhotosFor(query: query).results
+                collectionView.reloadData()
+            } catch  {
+                print(error)
+            }
+        }
     }
     
     
