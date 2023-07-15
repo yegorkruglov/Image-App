@@ -34,7 +34,6 @@ final class ImageCell: UICollectionViewCell {
     
     func configure(with post: Post) {
         let imageURL = URL(string: post.urls.small)
-        
         imageView.kf.indicatorType = .activity
         imageView.kf.setImage(
             with: imageURL,

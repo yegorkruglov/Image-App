@@ -80,6 +80,12 @@ extension CollectionViewController {
         
         return cell
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let fullImageVC = ViewController()
+        fullImageVC.post = posts[indexPath.item]
+        navigationController?.pushViewController(fullImageVC, animated: true)
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
