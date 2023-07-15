@@ -14,6 +14,7 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        title = "\(post.description ?? "Image")"
 
         configureImageView()
     }
@@ -22,9 +23,11 @@ final class ViewController: UIViewController {
     private func configureImageView() {
         view.addSubview(imageView)
         imageView.contentMode = .scaleAspectFit
+        
+        let margins = view.layoutMarginsGuide
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        imageView.topAnchor.constraint(equalTo: margins.topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: margins.bottomAnchor).isActive = true
         imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
 
