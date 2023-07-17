@@ -104,6 +104,7 @@ extension CollectionViewController {
             // Достигнут конец UICollectionView, подгружаем дополнительные данные
             guard
                 searchBar.isActive,
+                searchResults != nil,
                 searchResults.totalPages > 1,
                 numberOfPagesDownloaded < searchResults.totalPages,
                 !isLoadingData else { return }
