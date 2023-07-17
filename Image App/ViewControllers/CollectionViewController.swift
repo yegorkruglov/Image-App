@@ -19,18 +19,18 @@ final class CollectionViewController: UICollectionViewController, UISearchContro
     private let networkManager = NetworkManager.shared
     private let sectionInsets = UIEdgeInsets(top: 20, left: 20.0, bottom: 20, right: 20.0)
     private let itemsPerRow: CGFloat = 2
-    private var searchBar: UISearchController = {
-        let searchBar = UISearchController()
-        searchBar.searchBar.placeholder = "Search images"
-        searchBar.searchBar.searchBarStyle = .minimal
-        return searchBar
+    private var searchController: UISearchController = {
+        let searchController = UISearchController()
+        searchController.searchBar.placeholder = "Search images"
+        searchController.searchBar.searchBarStyle = .minimal
+        return searchController
     }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView!.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
-        searchBar.delegate = self
+        searchController.delegate = self
         
         configureNavBar()
         fetchRandomPosts()
@@ -51,9 +51,9 @@ final class CollectionViewController: UICollectionViewController, UISearchContro
     private func configureNavBar() {
         title = "Image App"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.searchController = searchBar
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchBar.searchResultsUpdater = self
+        navigationItem.searchController = searchController
+        searchController.searchResultsUpdater = self
+        searchController.delegate = self
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .refresh,
@@ -62,13 +62,22 @@ final class CollectionViewController: UICollectionViewController, UISearchContro
         )
     }
     
-    @objc private func reloadHomePage() {
+    private func clearCache() {
         let cache = ImageCache.default
         cache.clearMemoryCache()
         cache.clearDiskCache()
-        
         searchQuery = nil
+    }
+    
+    @objc private func reloadHomePage() {
+        clearCache()
         fetchRandomPosts()
+    }
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        clearCache()
+        fetchRandomPosts()
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
     }
     
 }
@@ -91,7 +100,7 @@ extension CollectionViewController {
         let fullImageVC = ViewController()
         fullImageVC.post = posts[indexPath.item]
         
-        searchBar.searchBar.resignFirstResponder()
+        searchController.searchBar.resignFirstResponder()
         navigationController?.pushViewController(fullImageVC, animated: true)
     }
     
@@ -103,7 +112,7 @@ extension CollectionViewController {
         if offsetY > contentHeight - visibleHeight {
             // Достигнут конец UICollectionView, подгружаем дополнительные данные
             guard
-                searchBar.isActive,
+                searchController.isActive,
                 searchResults != nil,
                 searchResults.totalPages > 1,
                 numberOfPagesDownloaded < searchResults.totalPages,
@@ -124,7 +133,6 @@ extension CollectionViewController {
                 }
             }
         }
-        
     }
 }
 
@@ -172,6 +180,4 @@ extension CollectionViewController: UISearchResultsUpdating {
             }
         }
     }
-    
-    
 }

@@ -16,7 +16,7 @@ enum NetworkError: Error {
 final class NetworkManager {
     static let shared = NetworkManager()
     
-    private let apiKey = "fx-pbkCF1FUUNGmTh7z9TKSWuDt7rbLHyRBjHWjD1YA"
+    private let apiKey = "NX34jEa70uwhD_hTvldS06VrNVL_w_v8wJL86a2fk_Q"
     
     func fetchRandomPosts(numberOfPosts count: Int) async throws -> [Post] {
         guard let url = URL(string: "https://api.unsplash.com/photos/random?client_id=\(apiKey)&count=\(count)") else {
