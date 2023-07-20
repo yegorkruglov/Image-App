@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class CollectionViewController: UICollectionViewController, UISearchControllerDelegate {
+final class CollectionViewController: UICollectionViewController {
     
     // MARK: - Private Properties
     private var isLoadingData = false
@@ -31,6 +31,7 @@ final class CollectionViewController: UICollectionViewController, UISearchContro
         super.viewDidLoad()
         self.collectionView!.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         searchController.delegate = self
+        searchController.searchResultsUpdater = self
         
         configureNavBar()
         fetchRandomPosts()
@@ -49,11 +50,9 @@ final class CollectionViewController: UICollectionViewController, UISearchContro
     }
     
     private func configureNavBar() {
-        title = "Image App"
+        title = "Featured images"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchController
-        searchController.searchResultsUpdater = self
-        searchController.delegate = self
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .refresh,
@@ -73,13 +72,6 @@ final class CollectionViewController: UICollectionViewController, UISearchContro
         clearCache()
         fetchRandomPosts()
     }
-    
-    func willDismissSearchController(_ searchController: UISearchController) {
-        clearCache()
-        fetchRandomPosts()
-        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-    }
-    
 }
 
 // MARK: - UICollectionViewDataSource
@@ -110,7 +102,6 @@ extension CollectionViewController {
         let visibleHeight = scrollView.bounds.height
         
         if offsetY > contentHeight - visibleHeight {
-            // Достигнут конец UICollectionView, подгружаем дополнительные данные
             guard
                 searchController.isActive,
                 searchResults != nil,
@@ -156,6 +147,15 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - UISearchControllerDelegate
+extension CollectionViewController: UISearchControllerDelegate {
+    func willDismissSearchController(_ searchController: UISearchController) {
+        clearCache()
+        fetchRandomPosts()
+        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+    }
+}
+
 // MARK: - UISearchResultsUpdating
 extension CollectionViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
@@ -173,7 +173,6 @@ extension CollectionViewController: UISearchResultsUpdating {
                     return
                 }
                 numberOfPagesDownloaded = 1
-                
                 collectionView.reloadData()
             } catch  {
                 print(error)
