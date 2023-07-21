@@ -11,20 +11,22 @@ import Kingfisher
 final class CollectionViewController: UICollectionViewController {
     
     // MARK: - Private Properties
-    private var isLoadingData = false
-    private var searchQuery: String!
-    private var searchResults: SearchResults!
-    private var numberOfPagesDownloaded: Int!
-    private var posts: [Post] = []
     private let networkManager = NetworkManager.shared
+    
     private let sectionInsets = UIEdgeInsets(top: 20, left: 20.0, bottom: 20, right: 20.0)
     private let itemsPerRow: CGFloat = 2
     private var searchController: UISearchController = {
         let searchController = UISearchController()
         searchController.searchBar.placeholder = "Search images"
-        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.searchBarStyle = .default
         return searchController
     }()
+
+    private var searchQuery: String!
+    private var searchResults: SearchResults!
+    private var numberOfPagesDownloaded: Int!
+    private var posts: [Post] = []
+    
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -53,6 +55,7 @@ final class CollectionViewController: UICollectionViewController {
         title = "Featured images"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .refresh,
@@ -100,7 +103,8 @@ extension CollectionViewController {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let visibleHeight = scrollView.bounds.height
-        
+        var isLoadingData = false
+
         if offsetY > contentHeight - visibleHeight {
             guard
                 searchController.isActive,
@@ -152,7 +156,9 @@ extension CollectionViewController: UISearchControllerDelegate {
     func willDismissSearchController(_ searchController: UISearchController) {
         clearCache()
         fetchRandomPosts()
-        collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        if !posts.isEmpty {
+            collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
+        }
     }
 }
 
@@ -168,7 +174,8 @@ extension CollectionViewController: UISearchResultsUpdating {
                 searchResults = try await networkManager.searchPhotosFor(query: query, page: 1)
                 posts = searchResults.results
                 guard searchResults.totalPages != 0 else {
-                    //no search results(label/alert)
+                    posts = []
+                    collectionView.reloadData()
                     print("No results")
                     return
                 }
